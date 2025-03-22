@@ -6,7 +6,7 @@ project(hello)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 file(GLOB SOURCES "src/*.cpp")
-add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
+add_subdirectory(vendor/SDL EXCLUDE_FROM_ALL)
 
 # This assumes the SDL source is avaiusual
 #add_executable(hello hello.cpp)
