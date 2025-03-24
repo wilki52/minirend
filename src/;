@@ -62,8 +62,8 @@ int main(int argc, char** argv){
 	constexpr int height = 1024;
 	TGAImage framebuffer(width, height, TGAImage::RGB);
 
-	int ax=7, ay=3;
-	int bx=12, by=37;
+//	int ax=7, ay=3;
+//	int bx=12, by=37;
 //	int cx=62, cy=53;
 //	
 //	int dx=15, dy=3;
@@ -72,8 +72,8 @@ int main(int argc, char** argv){
 //	framebuffer.set(bx, by, white);
 //	framebuffer.set(cx, cy, blue);
 //		
-	
-//`	line(cx, cy, bx, by, green, framebuffer);
+//	line(ax, ay, bx, by, blue, framebuffer);
+//	line(cx, cy, bx, by, green, framebuffer);
 //	line(ax, ay, cx, cy, red, framebuffer);
 //	line(cx, cy, ax, ay, yellow, framebuffer);
 //
@@ -83,55 +83,44 @@ int main(int argc, char** argv){
 //		line(x1, y1, x2, y2, {(uint8_t)rand()%256, (uint8_t)rand()%256,(uint8_t) rand()%256, (uint8_t)rand()%256}, framebuffer);
 //	}	
 	
-	std::string file_line;
+	std::string line;
 	std::ifstream wavefile("../obj/wireframe.obj");
 	int v_index = 0;
-	std::map<int, std::vector<int>> v_map;
-	while (std::getline(wavefile, file_line)){
-		std::vector<std::string> vec = split(file_line," ");
+	std::map<int, std::vector<float>> v_map;
+	while (std::getline(wavefile, line)){
+		std::vector<std::string> vec = split(line," ");
 		if(vec.at(0)=="v"){
 			//for (int i=0; i<vec.size(); i++){
                         //        std::cout<< i << ": " << vec.at(i) << std::endl;
                         //}
               		//check
 			if (vec.size()<4) continue;
-			int x = static_cast<int>((std::stof(vec[1])+1.0)*width/2);
-			int y= static_cast<int>((std::stof(vec[2])+1.0)*height/2);
+			float x = (std::stof(vec[1])+1.0)*width/4;
+			float y= (std::stof(vec[2])+1.0)*height/4;
 		
-			v_map[v_index] = std::vector<int>{x, y};
-		
+			v_map[v_index] = std::vector<float>{x, y};
+				
 			framebuffer.set(x,y, white);		
 		}
 		else if (vec.at(0)==("f")){
+
+
+	//		for (int i=0; i<vec.size(); i++){
+        //                        std::cout<< i << ": " << vec.at(i) << std::endl;
+        //                }
+        //                break;
 			//grab first number from each triplet, put into v_indices
 			std::vector<int> v_indices;
-			std::cout << "face found: "<< vec[1] << std::endl;
 			for (int i =1; i<vec.size(); i++){
 				std::vector<std::string> indices = split(vec[i], "/");
-				//std::cout << vec[1] << std::endl;
 				std::cout << indices[0] << std::endl;
-				v_indices.push_back(std::stoi(indices[0])-1);
-				std::cout << "after" << std::endl;
-			}	
-			//for each number in v_indices, create a line to the next one.
-			std::cout << "Now creating lines" << std::endl;
-			for (int i=1; i< v_indices.size(); i++){
-				//std::cout << v_indices[i-1] << std::endl;
-				std::vector<int> point_1 = v_map[v_indices[i-1]];
-				std::vector<int> point_2 = v_map[v_indices[i]];
-				//std::cout << point_1[0] << std::endl;
-				std::cout << typeid(point_1[0]).name() << " " << point_1[1]<< " "  << point_2[0] << " " << point_2[1] << std::endl;	
-				std::cout << point_1[0] << " " << point_1[1]<< " "  << point_2[0] << " " << point_2[1] << std::endl;	
-				line(point_1[0], point_1[1], point_2[0], point_2[1], red, framebuffer);
-
+				return 1;
 			}
-			std::vector<int> last = v_map[v_indices.back()];
-			std::vector<int> first = v_map[v_indices[0]];		
-			line(last[0], last[1], first[0], first[1], red, framebuffer);
-				//on the last one, make it connect ot the first.
+			
+			//for each number in v_indices, create a line to the next one.
+			//on the last one, make it connect ot the first.
 			//
 		}
-		v_index ++;
 	}
 
 	wavefile.close();
