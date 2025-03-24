@@ -1,6 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include "tgaimage.h"
 #include <cmath>
+#include "string_util.h"
+#include <vector>
 constexpr TGAColor white = {255, 255, 255, 255};
 constexpr TGAColor green = {0, 255, 0, 255};
 constexpr TGAColor red = {0, 0, 255, 255};
@@ -58,26 +61,48 @@ int main(int argc, char** argv){
 	constexpr int height = 64;
 	TGAImage framebuffer(width, height, TGAImage::RGB);
 
-	int ax=7, ay=3;
-	int bx=12, by=37;
-	int cx=62, cy=53;
+//	int ax=7, ay=3;
+//	int bx=12, by=37;
+//	int cx=62, cy=53;
+//	
+//	int dx=15, dy=3;
+//	int ex=62, ey=20;	
+//	framebuffer.set(ax, ay, white);
+//	framebuffer.set(bx, by, white);
+//	framebuffer.set(cx, cy, blue);
+//		
+//	line(ax, ay, bx, by, blue, framebuffer);
+//	line(cx, cy, bx, by, green, framebuffer);
+//	line(ax, ay, cx, cy, red, framebuffer);
+//	line(cx, cy, ax, ay, yellow, framebuffer);
+//
+//	for (int i =0; i<1000000; i++){
+//		int x1= rand()%width, y1=rand()%height;
+//		int x2= rand()&width, y2=rand()%height;
+//		line(x1, y1, x2, y2, {(uint8_t)rand()%256, (uint8_t)rand()%256,(uint8_t) rand()%256, (uint8_t)rand()%256}, framebuffer);
+//	}	
 	
-	int dx=15, dy=3;
-	int ex=62, ey=20;	
-	framebuffer.set(ax, ay, white);
-	framebuffer.set(bx, by, white);
-	framebuffer.set(cx, cy, blue);
-		
-	line(ax, ay, bx, by, blue, framebuffer);
-	line(cx, cy, bx, by, green, framebuffer);
-	line(ax, ay, cx, cy, red, framebuffer);
-	line(cx, cy, ax, ay, yellow, framebuffer);
+	std::string line;
+	std::ifstream wavefile("../obj/wireframe.obj");
+	while (std::getline(wavefile, line)){
+		std::vector<std::string> vec = split(line," ");
 
-	for (int i =0; i<1000000; i++){
-		int x1= rand()%width, y1=rand()%height;
-		int x2= rand()&width, y2=rand()%height;
-		line(x1, y1, x2, y2, {(uint8_t)rand()%256, (uint8_t)rand()%256,(uint8_t) rand()%256, (uint8_t)rand()%256}, framebuffer);
-	}	
+		if(vec.at(0)=="v"){
+			for (int i=0; i<vec.size(); i++){
+                                std::cout<< i << ": " << vec.at(i) << std::endl;
+                        }
+                       	
+		}
+		else if (vec.at(0)==("f")){
+			for (int i=0; i<vec.size(); i++){
+                                std::cout<< i << ": " << vec.at(i) << std::endl;
+                        }
+                        break;
+		}
+	}
+
+	wavefile.close();
+	
 	framebuffer.write_tga_file("framebuffer.tga");
 
 
