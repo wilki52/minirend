@@ -36,16 +36,18 @@ void line(int ax, int ay, int bx, int by, TGAColor color, TGAImage &framebuffer)
                 std::swap(ax, bx);
                 std::swap(ay, by);
         }
+	float y = ay;
 	for (int x=ax; x<bx; x++){
 		float t = (x-ax)/(float)(bx-ax);
-		int y = ay+t*(by-ay);
-		std::cout <<"t: " << t << " " << x << ", "<< y << std::endl;
+		//int y = ay+t*(by-ay);
+		//std::cout <<"t: " << t << " " << x << ", "<< y << std::endl;
 		if (steep){
 			framebuffer.set(y, x, color);
 		}
 		else {
 			framebuffer.set(x, y, color);
 		}
+		y+=(by-ay)/(float)(bx-ax); //OPTIMIZATION 1 : works because we nolonger have to calculate t. now just a simple division addition.
 		
 	}
 
@@ -70,7 +72,12 @@ int main(int argc, char** argv){
 	line(cx, cy, bx, by, green, framebuffer);
 	line(ax, ay, cx, cy, red, framebuffer);
 	line(cx, cy, ax, ay, yellow, framebuffer);
-	
+
+	for (int i =0; i<1000000; i++){
+		int x1= rand()%width, y1=rand()%height;
+		int x2= rand()&width, y2=rand()%height;
+		line(x1, y1, x2, y2, {(uint8_t)rand()%256, (uint8_t)rand()%256,(uint8_t) rand()%256, (uint8_t)rand()%256}, framebuffer);
+	}	
 	framebuffer.write_tga_file("framebuffer.tga");
 
 
